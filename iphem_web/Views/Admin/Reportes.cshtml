@@ -1,0 +1,245 @@
+@{
+    ViewData["Title"] = "Reportes Inteligentes";
+}
+
+<div class="container mt-4">
+
+    <div id="controlesIA" class="mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="text-iphem fw-bold"><i class="bi bi-bar-chart-fill me-2"></i>Reportes y Estadísticas</h2>
+                <p class="text-muted">Generador de análisis oficiales del IPHEM.</p>
+            </div>
+            <a asp-action="Index" class="btn btn-outline-secondary">Volver al Panel</a>
+        </div>
+
+        <ul class="nav nav-tabs" id="iaTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active fw-bold text-primary" id="plantillas-tab" data-bs-toggle="tab" data-bs-target="#plantillas" type="button" role="tab">
+                    <i class="bi bi-file-earmark-text me-1"></i> Reportes Automáticos
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link fw-bold text-success" id="chat-tab" data-bs-toggle="tab" data-bs-target="#chat" type="button" role="tab">
+                    <i class="bi bi-chat-dots me-1"></i> Asistente Libre
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content bg-white border border-top-0 rounded-bottom p-3 shadow-sm" id="iaTabsContent">
+            <div class="tab-pane fade show active" id="plantillas" role="tabpanel">
+                <div class="row g-2 align-items-end">
+                    <div class="col-md-9">
+                        <label class="form-label fw-bold small text-muted">Seleccione el enfoque del análisis:</label>
+                        <select id="selectTipoReporte" class="form-select border-primary">
+                            <option value="" selected disabled>--- Seleccione un formato de reporte ---</option>
+                            <option value="resumen">Resumen Ejecutivo General</option>
+                            <option value="marketing">Ideas para Campañas de Marketing</option>
+                            <option value="demografico">Análisis Demográfico y Geográfico</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button id="btnGenerarPlantilla" class="btn btn-primary w-100 fw-bold shadow-sm">
+                            <i class="bi bi-magic me-1"></i> Generar Análisis
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="chat" role="tabpanel">
+                <div class="row g-2 align-items-end">
+                    <div class="col-md-9">
+                        <label class="form-label fw-bold small text-muted">Hágale una pregunta específica al asistente:</label>
+                        <input type="text" id="inputPreguntaLibre" class="form-control border-success" placeholder="Ej: ¿Qué porcentaje del total representa el grupo A+?">
+                    </div>
+                    <div class="col-md-3">
+                        <button id="btnGenerarLibre" class="btn btn-success w-100 fw-bold shadow-sm">
+                            <i class="bi bi-send me-1"></i> Preguntar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loadingIA" class="text-center p-5 d-none bg-light rounded border mb-4">
+        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
+        <p class="mt-3 text-muted fw-bold" id="loadingTexto">El agente está analizando y redactando...</p>
+    </div>
+
+    <div class="text-end mb-3">
+        <button id="btnDescargarPDF" class="btn btn-danger btn-lg fw-bold d-none shadow">
+            <i class="bi bi-file-earmark-pdf-fill me-2"></i>Exportar Documento PDF
+        </button>
+    </div>
+
+    <div id="zonaExportable" class="bg-white p-4 rounded border shadow-sm" style="min-height: 800px;">
+
+        <div class="row mb-4 pb-3 border-bottom border-danger border-3 align-items-center">
+
+            <div class="col-3 text-start">
+                <img src="/img/reporte/logo_min_salud.png" alt="Gobierno" style="max-width: 120px; height: auto; display: block;" onerror="this.style.display='none'">
+            </div>
+
+            <div class="col-6 text-center px-0">
+                <h3 class="fw-bold text-dark mb-1" style="letter-spacing: 1px; font-size: 1.5rem;">MINISTERIO DE SALUD</h3>
+                <h5 class="text-secondary mb-1" style="font-size: 1.1rem;">Reporte Estadístico Oficial - IPHEM</h5>
+                <p class="text-muted small mb-0">Generado el @DateTime.Now.ToString("dd/MM/yyyy 'a las' HH:mm")</p>
+            </div>
+
+            <div class="col-3 text-end">
+                <img src="/img/reporte/logo_iphem.png" alt="IPHEM" style="max-width: 120px; height: auto; display: block; margin-left: auto;" onerror="this.style.display='none'">
+            </div>
+        </div>
+        
+        <div class="row mb-5">
+            <div class="col-5">
+                <h6 class="fw-bold text-center border-bottom pb-2">Distribución Sanguínea</h6>
+                <canvas id="chartSangre" style="max-height: 220px;"></canvas>
+            </div>
+            <div class="col-7">
+                <h6 class="fw-bold text-center border-bottom pb-2">Distribución por Departamento</h6>
+                <canvas id="chartDepto" style="max-height: 220px;"></canvas>
+            </div>
+        </div>
+
+        <div class="mb-5">
+            <h5 class="fw-bold text-iphem border-bottom pb-2"><i class="bi bi-robot me-2"></i>Análisis Cualitativo</h5>
+            <div id="resultadoIA" class="text-dark fs-6 mt-3" style="line-height: 1.8; text-align: justify;">
+                <em class="text-muted">El análisis generado por el sistema aparecerá en esta sección...</em>
+            </div>
+        </div>
+
+        <div>
+            <h5 class="fw-bold text-secondary border-bottom pb-2"><i class="bi bi-table me-2"></i>Anexo: Detalle Demográfico</h5>
+            <div class="row mt-3">
+                <div class="col-md-6 offset-md-3">
+                    <table class="table table-sm table-bordered table-striped text-center">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Departamento</th>
+                                <th>Cantidad de Donantes</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaDepartamentos">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <script>
+        const labelsSangre = @Html.Raw(ViewBag.LabelsSangre ?? "[]");
+        const valoresSangre = @Html.Raw(ViewBag.ValoresSangre ?? "[]");
+        const labelsDepto = @Html.Raw(ViewBag.LabelsDepto ?? "[]");
+        const valoresDepto = @Html.Raw(ViewBag.ValoresDepto ?? "[]");
+
+        // Llenar la tabla del anexo
+        const tbody = document.getElementById('tablaDepartamentos');
+        for(let i = 0; i < labelsDepto.length; i++) {
+            tbody.innerHTML += `<tr><td>${labelsDepto[i]}</td><td class="fw-bold">${valoresDepto[i]}</td></tr>`;
+        }
+
+        // Gráficos
+        new Chart(document.getElementById('chartSangre').getContext('2d'), {
+            type: 'pie',
+            data: { labels: labelsSangre, datasets: [{ data: valoresSangre, backgroundColor: ['#dc3545', '#0d6efd', '#198754', '#ffc107', '#6f42c1', '#0dcaf0', '#fd7e14', '#20c997'] }] },
+            options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12 } } } }
+        });
+
+        new Chart(document.getElementById('chartDepto').getContext('2d'), {
+            type: 'bar',
+            data: { labels: labelsDepto, datasets: [{ label: 'Donantes', data: valoresDepto, backgroundColor: '#dc3545', borderRadius: 4 }] },
+            options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } }, x: { ticks: { font: { size: 10 } } } } }
+        });
+
+        // Llamada a la IA
+        function consultarMotorIA(botonClickeado, tipoReporte, preguntaLibre, mensajeCarga) {
+            const resultadoDiv = document.getElementById('resultadoIA');
+            const loadingDiv = document.getElementById('loadingIA');
+            const btnPDF = document.getElementById('btnDescargarPDF');
+
+            const textoOriginalBtn = botonClickeado.innerHTML;
+
+            botonClickeado.disabled = true;
+            botonClickeado.innerHTML = '<i class="bi bi-hourglass-split me-1"></i> Pensando...';
+            btnPDF.classList.add('d-none');
+
+            document.getElementById('loadingTexto').innerText = mensajeCarga;
+            loadingDiv.classList.remove('d-none');
+            resultadoDiv.innerHTML = '<em class="text-muted">Generando nuevo análisis...</em>';
+
+            fetch('@Url.Action("GenerarReporteIA", "Admin")', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ TipoReporte: tipoReporte, PreguntaLibre: preguntaLibre })
+            })
+            .then(response => response.json())
+            .then(data => {
+                loadingDiv.classList.add('d-none');
+                botonClickeado.disabled = false;
+                botonClickeado.innerHTML = textoOriginalBtn;
+
+                if (data.exito) {
+                    resultadoDiv.innerHTML = data.mensaje.replace(/\n/g, '<br>');
+                    btnPDF.classList.remove('d-none');
+                } else {
+                    resultadoDiv.innerHTML = `<span class="text-danger fw-bold">Error:</span> ${data.mensaje}`;
+                }
+            })
+            .catch(error => {
+                loadingDiv.classList.add('d-none');
+                botonClickeado.disabled = false;
+                botonClickeado.innerHTML = textoOriginalBtn;
+                resultadoDiv.innerHTML = `<span class="text-danger fw-bold">Error de conexión local.</span>`;
+            });
+        }
+
+        document.getElementById('btnGenerarPlantilla').addEventListener('click', function() {
+            const tipo = document.getElementById('selectTipoReporte').value;
+            if (!tipo) return alert("Seleccione un formato.");
+            document.getElementById('inputPreguntaLibre').value = "";
+            consultarMotorIA(this, tipo, "", "Redactando reporte institucional...");
+        });
+
+        document.getElementById('btnGenerarLibre').addEventListener('click', function() {
+            const libre = document.getElementById('inputPreguntaLibre').value;
+            if (!libre.trim()) return alert("Escriba una pregunta.");
+            consultarMotorIA(this, "", libre, "Analizando su pregunta...");
+        });
+
+        // DESCARGA PDF MEJORADA
+        document.getElementById('btnDescargarPDF').addEventListener('click', function() {
+            // Un pequeño efecto en el botón para que el usuario sepa que está procesando
+            const originalText = this.innerHTML;
+            this.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Preparando PDF...';
+            this.disabled = true;
+
+            const elemento = document.getElementById('zonaExportable');
+
+            const opciones = {
+                margin:       [15, 10, 15, 10],
+                filename:     `Reporte_IPHEM_${new Date().toISOString().split('T')[0]}.pdf`,
+                image:        { type: 'jpeg', quality: 1.0 },
+                html2canvas:  { scale: 2, useCORS: true, logging: false }, // useCORS es clave para las imágenes
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+            };
+
+            // Usamos setTimeout para darle 100ms al navegador para redibujar cualquier cambio antes de la foto
+            setTimeout(() => {
+                html2pdf().set(opciones).from(elemento).save().then(() => {
+                    this.innerHTML = originalText;
+                    this.disabled = false;
+                });
+            }, 100);
+        });
+    </script>
+}

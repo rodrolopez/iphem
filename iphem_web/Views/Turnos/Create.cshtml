@@ -1,0 +1,255 @@
+@model iphem_web.Models.Turno
+
+@{
+    ViewData["Title"] = "Solicitar Turno";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow border-0">
+                <div class="card-header bg-iphem text-white">
+                    <h3 class="mb-0">Solicitud de Turno IPHEM</h3>
+                </div>
+
+                <div class="card-body bg-iphem-light">
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+                    <form asp-action="Create">
+
+                        <h5 class="text-iphem mb-3" style="font-weight: bold;">Datos del Donante</h5>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nombre</label>
+                                <input asp-for="Nombresolicitante" class="form-control" required placeholder="Tu nombre"/>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Apellido</label>
+                                <input asp-for="Apellidosolicitante" class="form-control" required placeholder="Tu apellido"/>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">DNI</label>
+                                <input asp-for="Dnisolicitante" class="form-control" required/>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Teléfono</label>
+                                <input asp-for="Telefonosolicitante" class="form-control" placeholder="Ej: 264..."/>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input asp-for="Emailsolicitante" type="email" class="form-control" placeholder="nombre@ejemplo.com"/>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Confirmar Correo Electrónico</label>
+                            <input type="email" id="EmailConfirmacion" class="form-control" placeholder="Escriba su correo nuevamente" autocomplete="off" onpaste="return false;" oncopy="return false;" required>
+                            <div id="errorEmail" class="text-danger d-none small mt-1"><i class="bi bi-exclamation-circle me-1"></i>Los correos no coinciden.</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="GrupoSanguineo" class="form-label fw-bold">Grupo Sanguíneo (Opcional)</label>
+                                <select asp-for="GrupoSanguineo" class="form-select">
+                                    <option value="">No lo sé / Prefiero no decirlo</option>
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Departamento" class="form-label fw-bold">Departamento de Residencia</label>
+                                <select asp-for="Departamento" class="form-select" required>
+                                    <option value="">Seleccione su departamento...</option>
+                                    <option value="Albardón">Albardón</option>
+                                    <option value="Angaco">Angaco</option>
+                                    <option value="Calingasta">Calingasta</option>
+                                    <option value="Capital">Capital</option>
+                                    <option value="Caucete">Caucete</option>
+                                    <option value="Chimbas">Chimbas</option>
+                                    <option value="Iglesia">Iglesia</option>
+                                    <option value="Jáchal">Jáchal</option>
+                                    <option value="Nueve de Julio">Nueve de Julio</option>
+                                    <option value="Pocito">Pocito</option>
+                                    <option value="Rawson">Rawson</option>
+                                    <option value="Rivadavia">Rivadavia</option>
+                                    <option value="San Martín">San Martín</option>
+                                    <option value="Santa Lucía">Santa Lucía</option>
+                                    <option value="Sarmiento">Sarmiento</option>
+                                    <option value="Ullum">Ullum</option>
+                                    <option value="Valle Fértil">Valle Fértil</option>
+                                    <option value="Veinticinco de Mayo">Veinticinco de Mayo</option>
+                                    <option value="Zonda">Zonda</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <hr/>
+
+                        <h5 class="text-iphem mb-3" style="font-weight: bold;">Detalles del Turno</h5>
+
+                        <div class="mb-3">
+                            <label class="form-label">Tipo de Donación</label>
+                            <select asp-for="Idtipoturno" class="form-select" asp-items="ViewBag.IdTipoTurno"></select>
+                        </div>
+
+                        <input type="hidden" asp-for="Fechahora" id="FechahoraOculto" />
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Fecha Preferida</label>
+                                <input type="date" id="inputFecha" class="form-control" min="@DateTime.Now.ToString("yyyy-MM-dd")" required />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Horario Disponible</label>
+                                <select id="selectHorario" class="form-select" disabled required>
+                                    <option value="">Seleccione una fecha primero...</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="bg-light p-3 rounded border mb-3">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="checkVoluntario">
+                                <label>Soy donante voluntario (no es para un paciente específico)</label>
+                            </div>
+                            <div class="mb-0">
+                                <label class="form-label">Paciente al que se le dona</label>
+                                <input asp-for="Pacientedestino" id="inputPaciente" class="form-control" placeholder="Nombre y apellido del paciente"/>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Observaciones (Opcional)</label>
+                            <textarea asp-for="Observaciones" class="form-control" rows="2"></textarea>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-iphem btn-lg">Confirmar Solicitud</button>
+                            <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Volver</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+            // --- 1. LÓGICA DEL CHECKBOX VOLUNTARIO ---
+            var checkbox = document.getElementById('checkVoluntario');
+            var inputPaciente = document.getElementById('inputPaciente');
+
+            function togglePaciente() {
+                if (checkbox.checked) {
+                    inputPaciente.value = '';
+                    inputPaciente.disabled = true;
+                    inputPaciente.placeholder = "Donación voluntaria";
+                } else {
+                    inputPaciente.disabled = false;
+                    inputPaciente.placeholder = "Nombre y apellido del paciente";
+                }
+            }
+            checkbox.addEventListener('change', togglePaciente);
+
+            // --- 2. LÓGICA DE HORARIOS DINÁMICOS ---
+            const inputFecha = document.getElementById('inputFecha');
+            const selectHorario = document.getElementById('selectHorario');
+            const inputFechahoraOculto = document.getElementById('FechahoraOculto');
+
+            // A. Cuando el usuario elige un día en el calendario
+            inputFecha.addEventListener('change', function () {
+                const fechaSeleccionada = this.value;
+
+                // Limpiamos el campo oculto por si cambió de día
+                inputFechahoraOculto.value = '';
+
+                if (!fechaSeleccionada) {
+                    selectHorario.innerHTML = '<option value="">Seleccione una fecha primero...</option>';
+                    selectHorario.disabled = true;
+                    return;
+                }
+
+                // Bloquear Fines de Semana
+                const fechaObj = new Date(fechaSeleccionada + 'T00:00:00');
+                const diaSemana = fechaObj.getDay();
+
+                if (diaSemana === 0 || diaSemana === 6) {
+                    alert("Por favor, seleccione un día de atención válido (Lunes a Viernes).");
+                    this.value = '';
+                    selectHorario.innerHTML = '<option value="">Seleccione una fecha primero...</option>';
+                    selectHorario.disabled = true;
+                    return;
+                }
+
+                selectHorario.innerHTML = '<option value="">Buscando turnos...</option>';
+                selectHorario.disabled = true;
+
+                // Llamamos a C#
+                fetch(`@Url.Action("GetHorariosDisponibles", "Turnos")?fecha=${fechaSeleccionada}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        selectHorario.innerHTML = '<option value="">Seleccione un horario...</option>';
+
+                        if (data.length === 0) {
+                            selectHorario.innerHTML = '<option value="">No hay turnos libres para este día</option>';
+                        } else {
+                            data.forEach(hora => {
+                                const option = document.createElement('option');
+                                option.value = hora;
+                                option.text = hora;
+                                selectHorario.appendChild(option);
+                            });
+                            selectHorario.disabled = false;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error al cargar horarios:', error);
+                        selectHorario.innerHTML = '<option value="">Error al cargar. Intente de nuevo.</option>';
+                    });
+            });
+
+            // B. LA SOLUCIÓN: Cuando eligen una hora, actualizamos el campo oculto al instante
+            selectHorario.addEventListener('change', function () {
+                if (inputFecha.value && this.value) {
+                    // Formato que entiende C#: "YYYY-MM-DDTHH:MM"
+                    inputFechahoraOculto.value = `${inputFecha.value}T${this.value}`;
+                } else {
+                    inputFechahoraOculto.value = ''; // Si deselecciona, lo vaciamos
+                }
+            });
+
+        });
+
+        // Validar que los correos coincidan antes de mandar el formulario
+        document.querySelector('form').addEventListener('submit', function (e) {
+            const email1 = document.getElementById('Emailsolicitante').value; // Chequeá que este ID coincida con tu input original
+            const email2 = document.getElementById('EmailConfirmacion').value;
+            const errorDiv = document.getElementById('errorEmail');
+
+            if (email1 !== email2) {
+                e.preventDefault(); // Frena el envío del formulario
+                errorDiv.classList.remove('d-none');
+                document.getElementById('EmailConfirmacion').focus();
+            } else {
+                errorDiv.classList.add('d-none');
+            }
+        });
+
+    </script>
+}

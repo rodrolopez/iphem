@@ -1,0 +1,44 @@
+@{ ViewData["Title"] = "Requisitos para Donar"; }
+
+<div class="bg-iphem py-5 mb-5 text-white">
+    <div class="container text-center">
+        <h1 class="fw-bold">Requisitos Básicos</h1>
+        <p class="lead">Información importante antes de solicitar tu turno.</p>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-md-6">
+            <h3 class="text-iphem mb-4 border-bottom pb-2">Condiciones Generales</h3>
+            <ul class="list-group list-group-flush fs-5">
+                <li class="list-group-item py-3"><i class="bi bi-check-circle-fill text-success me-3"></i>Tener entre <strong>18 y 65 años</strong> de edad.</li>
+                <li class="list-group-item py-3"><i class="bi bi-check-circle-fill text-success me-3"></i>Pesar más de <strong>50 kg</strong>.</li>
+                <li class="list-group-item py-3"><i class="bi bi-check-circle-fill text-success me-3"></i>Sentirse bien de salud al momento de donar.</li>
+                <li class="list-group-item py-3"><i class="bi bi-check-circle-fill text-success me-3"></i>No estar en ayunas (desayunar liviano, sin lácteos ni grasas).</li>
+                <li class="list-group-item py-3"><i class="bi bi-check-circle-fill text-success me-3"></i>Presentar <strong>DNI</strong> o documento válido.</li>
+            </ul>
+        </div>
+        
+        <div class="col-md-6 mt-4 mt-md-0">
+            <div class="card bg-light border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <h4 class="text-danger fw-bold mb-3"><i class="bi bi-exclamation-triangle"></i> No podrás donar si:</h4>
+                    <ul class="list-unstyled">
+                        <li class="mb-3">❌ Te hiciste un tatuaje o piercing en los últimos <strong>12 meses</strong>.</li>
+                        <li class="mb-3">❌ Tuviste una cirugía o endoscopía en los últimos <strong>6 meses</strong>.</li>
+                        <li class="mb-3">❌ Estás cursando un embarazo o amamantando.</li>
+                        <li class="mb-3">❌ Tuviste hepatitis después de los 11 años de edad.</li>
+                    </ul>
+                    <div class="alert alert-warning mt-4">
+                        <small>Ante cualquier duda específica, podés consultar con nuestro equipo médico antes de la extracción.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="text-center mt-5">
+        <a asp-controller="Turnos" asp-action="Create" class="btn btn-lg btn-iphem px-5">Cumplo los requisitos, quiero donar</a>
+    </div>
+</div>

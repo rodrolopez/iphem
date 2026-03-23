@@ -1,0 +1,80 @@
+@model iphem_web.Models.Turno
+
+@{
+    ViewData["Title"] = "Gestionar Turno";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow border-0">
+                <div class="card-header bg-iphem text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Gestionar Turno #@Model.Id</h4>
+                    <span class="badge bg-light text-dark">Admin Panel</span>
+                </div>
+                
+                <div class="card-body bg-light">
+                    <form asp-action="Edit">
+                        <input type="hidden" asp-for="Id" /> <div class="p-3 mb-3 bg-white rounded border border-warning">
+                            <h5 class="text-iphem fw-bold"><i class="bi bi-sliders"></i> Estado del Turno</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Estado Actual</label>
+                                    <select asp-for="Idestadoturno" class="form-select border-warning" asp-items="ViewBag.Idestadoturno"></select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Fecha y Hora</label>
+                                    <input asp-for="Fechahora" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <h6 class="text-secondary border-bottom pb-2">Datos del Solicitante</h6>
+                        
+                        <div class="row mt-3">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nombre</label>
+                                <input asp-for="Nombresolicitante" class="form-control" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Apellido</label>
+                                <input asp-for="Apellidosolicitante" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">DNI</label>
+                                <input asp-for="Dnisolicitante" class="form-control" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Teléfono</label>
+                                <input asp-for="Telefonosolicitante" class="form-control" />
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Paciente Destino (Dejar vacío si es voluntario)</label>
+                            <input asp-for="Pacientedestino" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Tipo de Turno</label>
+                            <select asp-for="Idtipoturno" class="form-select" asp-items="ViewBag.Idtipoturno"></select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Observaciones</label>
+                            <textarea asp-for="Observaciones" class="form-control" rows="2"></textarea>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="Turnos" class="btn btn-secondary me-md-2">Cancelar</a>
+                            <button type="submit" class="btn btn-iphem px-4">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

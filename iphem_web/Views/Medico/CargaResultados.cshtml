@@ -1,0 +1,57 @@
+@model IEnumerable<iphem_web.Models.Turno>
+
+@{
+    ViewData["Title"] = "Carga de Resultados Serológicos";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold text-dark"><i class="bi bi-file-earmark-medical text-info me-2"></i>Resultados Pendientes de Carga</h3>
+    </div>
+
+    @if (TempData["MensajeExito"] != null)
+    {
+        <div class="alert alert-success alert-dismissible shadow-sm"><i class="bi bi-check-circle me-2"></i>@TempData["MensajeExito"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+    }
+
+    <div class="card shadow-sm border-0 border-top border-4 border-info">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light text-secondary">
+                        <tr>
+                            <th class="ps-4">Donante</th>
+                            <th>DNI</th>
+                            <th>Fecha de Extracción</th>
+                            <th>Estado</th>
+                            <th class="text-end pe-4">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Any())
+                        {
+                            <tr><td colspan="5" class="text-center py-5 text-muted">No hay extracciones pendientes de carga de resultados.</td></tr>
+                        }
+                        else
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="ps-4 fw-bold">@item.UsuarioNavigation?.Nombrecompleto</td>
+                                    <td>@item.Dnisolicitante</td>
+                                    <td>@item.Fechahora.ToString("dd/MM/yyyy")</td>
+                                    <td><span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25"><i class="bi bi-check2-circle me-1"></i>Confirmado</span></td>
+                                    <td class="text-end pe-4">
+                                        <a asp-action="SubirResultado" asp-route-id="@item.Id" class="btn btn-outline-info btn-sm fw-bold shadow-sm">
+                                            <i class="bi bi-upload me-1"></i> Subir PDF
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

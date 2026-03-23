@@ -1,0 +1,191 @@
+@model IEnumerable<iphem_web.Models.Turno>
+
+@{
+    ViewData["Title"] = "Mi Portal de Donante";
+}
+
+<div class="container mt-4">
+    @if (TempData["MensajeExito"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i><strong>¡Excelente!</strong> @TempData["MensajeExito"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["MensajeInfo"] != null)
+    {
+        <div class="alert alert-info alert-dismissible fade show shadow-sm" role="alert">
+            <i class="bi bi-info-circle-fill me-2"></i> @TempData["MensajeInfo"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm bg-iphem text-white mb-4">
+                <div class="card-body p-4 text-center">
+                    <div class="mb-3"><i class="bi bi-person-circle" style="font-size: 4rem;"></i></div>
+                    <h4>¡Hola, @User.Identity.Name!</h4>
+                    <p class="small opacity-75">Gracias por tu compromiso con la donación de sangre.</p>
+                    <hr class="bg-white" />
+                    <div class="d-grid gap-3 mt-3">
+                        <a asp-controller="Turnos" asp-action="Create" class="btn btn-light fw-bold text-iphem py-2">
+                            <i class="bi bi-plus-circle me-2"></i>Solicitar Nuevo Turno
+                        </a>
+                        <a asp-controller="Donante" asp-action="CambiarClave" class="btn btn-outline-light btn-sm fw-bold">
+                            <i class="bi bi-shield-lock me-2"></i>Cambiar Contraseña
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <h6 class="fw-bold"><i class="bi bi-info-circle me-2 text-iphem"></i>Información Útil</h6>
+                    <ul class="list-unstyled mb-0 small mt-3">
+                        <li class="mb-2"><i class="bi bi-check2-circle me-2 text-success"></i>Recordá traer tu DNI.</li>
+                        <li class="mb-2"><i class="bi bi-check2-circle me-2 text-success"></i>Desayuná sin grasas.</li>
+                        <li><i class="bi bi-check2-circle me-2 text-success"></i>Descansá bien la noche anterior.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <h4 class="mb-4 fw-bold text-secondary">Mis Turnos Registrados</h4>
+
+            @if (!Model.Any())
+            {
+                <div class="alert alert-light border text-center py-5 shadow-sm">
+                    <i class="bi bi-calendar-x display-4 text-muted"></i>
+                    <p class="mt-3 text-muted">Aún no tenés turnos registrados en el sistema.</p>
+                </div>
+            }
+            else
+            {
+                foreach (var item in Model)
+                {
+                    <div class="card border-0 shadow-sm mb-3 border-start border-4 @(item.Fechahora >= DateTime.Now ? "border-primary" : "border-secondary opacity-75")">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5 class="mb-1 fw-bold">@item.Fechahora.ToString("dd 'de' MMMM, yyyy")</h5>
+                                    <div class="text-muted small">
+                                        <i class="bi bi-clock me-1"></i> @item.Fechahora.ToString("HH:mm") hs
+                                        <span class="mx-2">|</span>
+                                        <i class="bi bi-droplet me-1"></i> @item.IdtipoturnoNavigation?.Nombre
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    @if (item.IdestadoturnoNavigation?.Nombre == "Pendiente")
+                                    {
+                                        <span class="badge rounded-pill bg-warning text-dark px-3 mb-2 d-block">Pendiente</span>
+                                        <form asp-action="Cancelar" asp-route-id="@item.Id" method="post" onsubmit="return confirm('¿Estás seguro de cancelar?');">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" style="font-size: 0.75rem;">
+                                                <i class="bi bi-x-circle me-1"></i>Cancelar Turno
+                                            </button>
+                                        </form>
+                                    }
+                                    else if (item.IdestadoturnoNavigation?.Nombre == "Confirmado")
+                                    {
+                                        <span class="badge rounded-pill bg-success px-3">Confirmado</span>
+                                    }
+                                    else if (item.IdestadoturnoNavigation?.Nombre == "Cancelado")
+                                    {
+                                        <span class="badge rounded-pill bg-danger px-3">Cancelado</span>
+                                    }
+                                </div>
+                            </div>
+
+                            @if (item.TriageNavigation == null && item.IdestadoturnoNavigation?.Nombre != "Cancelado")
+                            {
+                                <hr class="text-muted opacity-25 my-3" />
+                                <div class="bg-warning bg-opacity-10 p-3 rounded d-flex justify-content-between align-items-center border border-warning border-opacity-50">
+                                    <div class="small text-dark">
+                                        <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
+                                        <strong>Acción Requerida:</strong> Debés completar tu cuestionario de salud.
+                                    </div>
+                                    <a asp-action="CompletarTriage" asp-route-id="@item.Id" class="btn btn-sm btn-warning fw-bold text-dark px-3 shadow-sm text-nowrap ms-3">
+                                        <i class="bi bi-ui-checks me-1"></i>Completar Triage
+                                    </a>
+                                </div>
+                            }
+                            else if (item.TriageNavigation != null)
+                            {
+                                <hr class="text-muted opacity-25 my-3" />
+
+                                @if (item.IdestadoturnoNavigation?.Nombre == "Confirmado")
+                                {
+                                    <div class="bg-success bg-opacity-10 p-2 rounded text-success small fw-bold border border-success border-opacity-25 d-inline-block">
+                                        <i class="bi bi-check-circle-fill me-1"></i> Triage Digital Aprobado el @item.TriageNavigation.FechaCompletado.ToString("dd/MM/yyyy")
+                                    </div>
+                                    @if (!string.IsNullOrEmpty(item.FirmaLaboratorista))
+                                    {
+                                        <div class="mt-2 text-muted" style="font-size: 0.85rem;">
+                                            <i class="bi bi-pen-fill text-primary me-1"></i>
+                                            Validado electrónicamente por: <span class="fw-bold">@item.FirmaLaboratorista</span>
+                                        </div>
+                                    }
+                                }
+                                else if (item.IdestadoturnoNavigation?.Nombre == "Pendiente")
+                                {
+                                    <div class="bg-warning bg-opacity-10 p-2 rounded text-dark small fw-bold border border-warning border-opacity-50 d-inline-block">
+                                        <i class="bi bi-hourglass-split me-1"></i> Formulario pendiente de evaluación (@item.TriageNavigation.FechaCompletado.ToString("dd/MM/yyyy"))
+                                    </div>
+                                }
+                                else if (item.IdestadoturnoNavigation?.Nombre == "Cancelado")
+                                {
+                                    <div class="bg-danger bg-opacity-10 p-3 rounded border border-danger border-opacity-25 d-block">
+                                        <div class="text-danger fw-bold mb-1">
+                                            <i class="bi bi-file-earmark-x-fill me-1"></i> Evaluación Médica Rechazada
+                                        </div>
+                                        <div class="small text-dark mt-2">
+                                            Lo sentimos, tu perfil no cumple temporalmente con los requisitos médicos vigentes.
+                                            @if (!string.IsNullOrEmpty(item.Observaciones))
+                                            {
+                                                <div class="mt-2 p-2 bg-white rounded border border-danger border-opacity-50 text-danger shadow-sm">
+                                                    <strong>Motivo informado por el profesional:</strong> <br/>
+                                                    @item.Observaciones
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            @if (!string.IsNullOrEmpty(item.RutaPdfResultado))
+                            {
+                                <hr class="text-muted opacity-25 my-3" />
+                                <div class="bg-info bg-opacity-10 p-3 rounded border border-info border-opacity-50">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div class="text-info fw-bold mb-1">
+                                                <i class="bi bi-file-earmark-medical-fill me-1"></i> Resultados de Laboratorio Disponibles
+                                            </div>
+                                            @if (!string.IsNullOrEmpty(item.NotasLaboratorio))
+                                            {
+                                                <div class="small text-dark mt-2 border-start border-3 border-info ps-2">
+                                                    <strong class="text-info">Nota del profesional:</strong> <br/>
+                                                    <span class="fst-italic">"@item.NotasLaboratorio"</span>
+                                                </div>
+                                            }
+                                            @if (!string.IsNullOrEmpty(item.FirmaLaboratorista))
+                                            {
+                                                <div class="mt-2 text-muted" style="font-size: 0.85rem;">
+                                                    <i class="bi bi-pen-fill text-primary me-1"></i>
+                                                    Validado electrónicamente por: <span class="fw-bold">@item.FirmaLaboratorista</span>
+                                                </div>
+                                            }
+                                        </div>
+                                        <a asp-action="DescargarResultado" asp-route-id="@item.Id" class="btn btn-sm btn-info fw-bold text-white px-3 shadow-sm text-nowrap ms-3">
+                                            <i class="bi bi-download me-1"></i>Descargar PDF
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>

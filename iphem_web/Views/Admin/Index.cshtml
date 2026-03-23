@@ -1,0 +1,190 @@
+@{
+    ViewData["Title"] = "Panel de Control";
+}
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i> @TempData["Mensaje"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="text-iphem fw-bold">Panel de Administración</h2>
+            <p class="text-muted">Bienvenido al sistema de gestión del IPHEM.</p>
+        </div>
+        <div>
+            <span class="badge bg-light text-dark border">
+                @DateTime.Now.ToString("dddd, dd 'de' MMMM")
+            </span>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card text-white bg-iphem mb-3 shadow h-100">
+                <div class="card-header border-0">Solicitudes Pendientes</div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h1 class="display-3 fw-bold">@ViewBag.Pendientes</h1>
+                        <i class="bi bi-exclamation-circle-fill" style="font-size: 3rem; opacity: 0.5;"></i>
+                    </div>
+                    <p class="card-text">Usuarios esperando confirmación.</p>
+                </div>
+                <div class="card-footer border-0 bg-transparent">
+                    <a asp-action="Turnos" class="text-white text-decoration-none stretched-link">
+                        Ir a gestionar <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card bg-warning text-dark mb-3 shadow h-100">
+                <div class="card-header border-0 fw-bold">Turnos de Hoy</div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h1 class="display-3 fw-bold">@ViewBag.TurnosHoy</h1>
+                        <i class="bi bi-calendar-event-fill" style="font-size: 3rem; opacity: 0.5;"></i>
+                    </div>
+                    <p class="card-text">Ingresos programados para la fecha.</p>
+                </div>
+                <div class="card-footer border-0 bg-transparent">
+                    <a asp-action="Turnos" asp-route-filtro="hoy" class="text-dark fw-bold text-decoration-none stretched-link">
+                        Ir a gestionar <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-dark bg-light mb-3 shadow h-100 border">
+                <div class="card-header bg-transparent">Total Confirmados</div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h1 class="display-3 fw-bold text-success">@ViewBag.Confirmados</h1>
+                        <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem; opacity: 0.5;"></i>
+                    </div>
+                    <p class="card-text text-muted">Turnos ya procesados y aprobados.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h4 class="text-iphem mb-3 mt-5">Accesos Rápidos</h4>
+
+    <div class="row g-4 mb-5">
+
+        <div class="col-12 col-md-6 col-lg-4">
+            <a asp-action="Turnos" class="card h-100 text-decoration-none text-dark shadow-sm hover-card border-0">
+                <div class="card-body text-center p-4">
+                    <div class="mb-3">
+                        <i class="bi bi-list-check text-primary" style="font-size: 2.5rem;"></i>
+                    </div>
+                    <h5 class="fw-bold">Gestión de Turnos</h5>
+                    <p class="text-muted small mb-0">Administrar, filtrar y editar solicitudes.</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+            <a asp-controller="Home" asp-action="Index" class="card h-100 text-decoration-none text-dark shadow-sm hover-card border-0">
+                <div class="card-body text-center p-4">
+                    <div class="mb-3">
+                        <i class="bi bi-globe text-secondary" style="font-size: 2.5rem;"></i>
+                    </div>
+                    <h5 class="fw-bold">Ir al Sitio Público</h5>
+                    <p class="text-muted small mb-0">Ver cómo ven la página los donantes.</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+            <a asp-action="Noticias" class="card h-100 text-decoration-none text-dark shadow-sm hover-card border-0">
+                <div class="card-body text-center p-4">
+                    <div class="mb-3">
+                        <i class="bi bi-newspaper text-info" style="font-size: 2.5rem;"></i>
+                    </div>
+                    <h5 class="fw-bold">Gestor de Noticias</h5>
+                    <p class="text-muted small mb-0">Publicar novedades institucionales.</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+            <a asp-controller="Usuarios" asp-action="Index" class="card h-100 text-decoration-none text-dark shadow-sm hover-card border-0">
+                <div class="card-body text-center p-4">
+                    <div class="mb-3">
+                        <i class="bi bi-people-fill text-success" style="font-size: 2.5rem;"></i>
+                    </div>
+                    <h5 class="fw-bold">Gestión de Personal</h5>
+                    <p class="text-muted small mb-0">Administrar médicos y usuarios del sistema.</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+            <a asp-action="Carrusel" class="card h-100 text-decoration-none text-dark shadow-sm hover-card border-0">
+                <div class="card-body text-center p-4">
+                    <div class="mb-3">
+                        <i class="bi bi-images text-danger" style="font-size: 2.5rem;"></i>
+                    </div>
+                    <h5 class="fw-bold">Gestor de Carrusel</h5>
+                    <p class="text-muted small mb-0">Editar imágenes de campañas en el inicio.</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+            <a asp-action="ConfiguracionTurnos" class="card h-100 text-decoration-none text-dark shadow-sm hover-card border-0">
+                <div class="card-body text-center p-4">
+                    <div class="mb-3">
+                        <i class="bi bi-clock-history text-warning" style="font-size: 2.5rem;"></i>
+                    </div>
+                    <h5 class="fw-bold">Límites de Turnos</h5>
+                    <p class="text-muted small mb-0">Configurar horarios y cupos diarios.</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+            <a asp-action="Auditoria" class="card h-100 text-decoration-none text-dark shadow-sm hover-card border-0">
+                <div class="card-body text-center p-4">
+                    <div class="mb-3">
+                        <i class="bi bi-shield-lock-fill text-dark" style="font-size: 2.5rem;"></i>
+                    </div>
+                    <h5 class="fw-bold">Registro de Auditoría</h5>
+                    <p class="text-muted small mb-0">Historial de acciones y cambios en la base de datos.</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+            <a asp-action="Reportes" class="card h-100 text-decoration-none text-dark shadow-sm hover-card border-0">
+                <div class="card-body text-center p-4">
+                    <div class="mb-3">
+                        <i class="bi bi-magic text-info" style="font-size: 2.5rem;"></i>
+                    </div>
+                    <h5 class="fw-bold">Reportes IA</h5>
+                    <p class="text-muted small mb-0">Generador automático de análisis y estadísticas del IPHEM.</p>
+                </div>
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .hover-card {
+        background-color: #ffffff;
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out;
+    }
+    .hover-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+        background-color: #f8f9fa !important; /* Gris súper claro */
+    }
+</style>

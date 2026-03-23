@@ -1,0 +1,101 @@
+@model iphem_web.Models.Turno
+
+@{
+    ViewData["Title"] = "Evaluación Médica de Triage";
+    var triage = Model.TriageNavigation;
+}
+
+<div class="container mt-4 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center py-3">
+                    <h5 class="mb-0"><i class="bi bi-file-medical me-2"></i>Ficha de Triage Digital</h5>
+                    <span class="badge bg-light text-dark">ID Turno: #@Model.Id</span>
+                </div>
+
+                <div class="card-body p-4">
+                    <div class="bg-light p-3 rounded mb-4 border-start border-4 border-secondary">
+                        <h6 class="fw-bold text-uppercase mb-3">Datos del Solicitante</h6>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <p class="mb-1"><strong>Nombre:</strong> @Model.UsuarioNavigation?.Nombrecompleto</p>
+                                <p class="mb-1"><strong>DNI:</strong> @Model.Dnisolicitante</p>
+                            </div>
+                            <div class="col-sm-6">
+                                <p class="mb-1"><strong>Fecha Turno:</strong> @Model.Fechahora.ToString("dd/MM/yyyy HH:mm")</p>
+                                <p class="mb-1"><strong>Triage completado:</strong> @triage.FechaCompletado.ToString("dd/MM/yyyy HH:mm")</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h6 class="fw-bold text-uppercase mb-3 border-bottom pb-2 text-primary">Respuestas de Salud</h6>
+
+                    <ul class="list-group list-group-flush mb-4">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            ¿Pesa más de 50 kg?
+                            <span class="badge @(triage.PesoMayor50Kg ? "bg-success" : "bg-danger") rounded-pill px-3">@(triage.PesoMayor50Kg ? "SÍ" : "NO")</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            ¿Se siente en buen estado de salud hoy?
+                            <span class="badge @(triage.SentirseBienHoy ? "bg-success" : "bg-danger") rounded-pill px-3">@(triage.SentirseBienHoy ? "SÍ" : "NO")</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            ¿Tatuajes o piercings en los últimos 12 meses?
+                            <span class="badge @(!triage.TatuajesPiercings12Meses ? "bg-success" : "bg-danger") rounded-pill px-3">@(triage.TatuajesPiercings12Meses ? "SÍ" : "NO")</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            ¿Cirugías en los últimos 12 meses?
+                            <span class="badge @(!triage.Cirugias12Meses ? "bg-success" : "bg-danger") rounded-pill px-3">@(triage.Cirugias12Meses ? "SÍ" : "NO")</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            ¿Tomó antibióticos en los últimos 7 días?
+                            <span class="badge @(!triage.TomoAntibioticos7Dias ? "bg-success" : "bg-danger") rounded-pill px-3">@(triage.TomoAntibioticos7Dias ? "SÍ" : "NO")</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            ¿Embarazo o lactancia?
+                            <span class="badge @(!triage.EmbarazoOLactancia ? "bg-success" : "bg-danger") rounded-pill px-3">@(triage.EmbarazoOLactancia ? "SÍ" : "NO")</span>
+                        </li>
+                    </ul>
+
+                    @if(Model.IdestadoturnoNavigation?.Nombre == "Pendiente")
+                    {
+                        <div class="alert alert-warning border border-warning shadow-sm">
+                            <h6 class="fw-bold"><i class="bi bi-shield-exclamation me-2"></i>Decisión Médica</h6>
+                            <p class="small mb-3">Revisá las respuestas marcadas en rojo (si las hay). Una vez tomada la decisión, el donante será notificado en su portal.</p>
+
+                            <form asp-action="EvaluarTriage" method="post" class="mt-3">
+                                <input type="hidden" name="id" value="@Model.Id" />
+
+                                <div class="mb-3" id="divMotivo" style="display:none;">
+                                    <label class="form-label text-danger fw-bold small">Motivo del rechazo (Visible para el donante):</label>
+                                    <input type="text" name="motivoRechazo" class="form-control border-danger" placeholder="Ej: Tatuaje reciente (menos de 12 meses)" />
+                                </div>
+
+                                <div class="d-flex gap-2" id="botonesPrincipales">
+                                    <button type="submit" name="accion" value="Aprobar" class="btn btn-success flex-grow-1 fw-bold">
+                                        <i class="bi bi-check-circle me-1"></i> Aprobar Triage
+                                    </button>
+
+                                    <button type="button" class="btn btn-danger flex-grow-1 fw-bold" onclick="document.getElementById('divMotivo').style.display='block'; document.getElementById('btnConfirmar').style.display='block'; document.getElementById('botonesPrincipales').style.display='none';">
+                                        <i class="bi bi-x-circle me-1"></i> Rechazar
+                                    </button>
+                                </div>
+
+                                <button type="submit" name="accion" value="Rechazar" id="btnConfirmar" class="btn btn-outline-danger w-100 fw-bold mt-2" style="display:none;">
+                                    Confirmar Cancelación y Notificar
+                                </button>
+                            </form>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-secondary text-center">
+                            <strong>Estado actual del turno:</strong> @Model.IdestadoturnoNavigation?.Nombre
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

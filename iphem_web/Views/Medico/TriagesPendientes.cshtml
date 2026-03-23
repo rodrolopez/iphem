@@ -1,0 +1,61 @@
+@model IEnumerable<iphem_web.Models.Turno>
+
+@{
+    ViewData["Title"] = "Evaluación de Triages";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold text-dark"><i class="bi bi-inboxes text-iphem me-2"></i>Triages Pendientes de Evaluación</h3>
+    </div>
+
+    @if (TempData["MensajeExito"] != null)
+    {
+        <div class="alert alert-success alert-dismissible shadow-sm"><i class="bi bi-check-circle me-2"></i>@TempData["MensajeExito"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+    }
+    @if (TempData["MensajeError"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible shadow-sm"><i class="bi bi-x-circle me-2"></i>@TempData["MensajeError"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+    }
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light text-secondary">
+                        <tr>
+                            <th class="ps-4">Donante</th>
+                            <th>DNI</th>
+                            <th>Fecha del Turno</th>
+                            <th>Formulario Llenado</th>
+                            <th class="text-end pe-4">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Any())
+                        {
+                            <tr><td colspan="5" class="text-center py-5 text-muted">No hay triages pendientes de evaluación en este momento.</td></tr>
+                        }
+                        else
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="ps-4 fw-bold">@item.UsuarioNavigation?.Nombrecompleto</td>
+                                    <td>@item.Dnisolicitante</td>
+                                    <td>@item.Fechahora.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>@item.TriageNavigation?.FechaCompletado.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td class="text-end pe-4">
+                                        <a asp-action="VerTriage" asp-route-id="@item.Id" class="btn btn-warning btn-sm fw-bold shadow-sm">
+                                            <i class="bi bi-clipboard2-pulse me-1"></i> Evaluar
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

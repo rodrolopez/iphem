@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData["Title"] - IPHEM</title>
+    
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/iphem_web.styles.css" asp-append-version="true"/>
+    
+    <style>
+        body { font-family: 'Roboto', sans-serif; }
+        .top-bar { font-size: 0.85rem; }
+        .navbar-main { box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+
+<div class="bg-light py-1 border-bottom top-bar">
+    <div class="container d-flex justify-content-between align-items-center">
+        <div class="text-muted">
+            <small>Un sitio oficial del <strong>Gobierno de San Juan</strong></small>
+        </div>
+        <div>
+            <a href="#" class="text-secondary me-2"><i class="bi bi-facebook"></i></a>
+            <a href="#" class="text-secondary me-2"><i class="bi bi-instagram"></i></a>
+            <a href="#" class="text-secondary"><i class="bi bi-youtube"></i></a>
+        </div>
+    </div>
+</div>
+
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white navbar-main sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" asp-controller="Home" asp-action="Index">
+                <i class="bi bi-droplet-fill text-iphem fs-2 me-2"></i>
+                <div class="d-flex flex-column">
+                    <span class="fw-bold text-dark lh-1">IPHEM</span>
+                    <small class="text-muted" style="font-size: 0.7rem;">Instituto Provincial de Hemoterapia</small>
+                </div>
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 fw-bold text-uppercase">
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">INICIO</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Turnos" asp-action="Create">TURNOS</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Requisitos">REQUISITOS</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Institucional">INSTITUCIONAL</a></li>
+
+                    @if (User.Identity!.IsAuthenticated)
+                    {
+                        @if (User.IsInRole("Administrador"))
+                        {
+                            <li class="nav-item"><a class="nav-link text-primary" asp-controller="Admin" asp-action="Index">PANEL DE ADMINISTRACION</a></li>
+                        }
+                        else if (User.IsInRole("Medico"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-danger fw-bold" asp-controller="Medico" asp-action="Index"><i class="bi bi-heart-pulse me-1"></i>PANEL MÉDICO</a>
+                            </li>
+                        }
+                        else if (User.IsInRole("Donante"))
+                        {
+                            // SOLO mostramos "MI PORTAL" si NO estamos parados en el controlador de Donante
+                            if (ViewContext.RouteData.Values["controller"]?.ToString() != "Donante")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-iphem fw-bold" asp-controller="Donante" asp-action="Index">
+                                        <i class="bi bi-person-badge me-1"></i>MI PORTAL
+                                    </a>
+                                </li>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <li class="nav-item border-start ms-lg-3 ps-lg-3">
+                            <a class="nav-link text-dark" asp-controller="Acceso" asp-action="Login">INGRESAR</a>
+                        </li>
+                    }
+                </ul>
+
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <li class="nav-item me-3">
+                            <span class="navbar-text text-muted small">
+                                <i class="bi bi-person-circle me-1"></i>@User.Identity.Name
+                            </span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-outline-danger btn-sm px-3 fw-bold" asp-controller="Acceso" asp-action="Logout" style="font-size: 0.75rem;">
+                                SALIR
+                            </a>
+                        </li>
+                    </ul>
+                }
+            </div>
+        </div>
+    </nav>
+</header>
+
+<main role="main">
+    @RenderBody()
+</main>
+
+<footer class="bg-dark text-white pt-5 pb-3 mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <h5 class="text-uppercase fw-bold text-iphem mb-3">IPHEM</h5>
+                <p class="small text-white-50">
+                    Garantizamos sangre segura para todos los sanjuaninos. 
+                    Un compromiso con la vida y la salud pública.
+                </p>
+            </div>
+            <div class="col-md-4 mb-4">
+                <h5 class="text-uppercase fw-bold text-iphem mb-3">Contacto</h5>
+                <ul class="list-unstyled small text-white-50">
+                    <li class="mb-2"><i class="bi bi-geo-alt me-2"></i> Rivadavia 728 Este, San Juan</li>
+                    <li class="mb-2"><i class="bi bi-telephone me-2"></i> (0264) 422-3571</li>
+                    <li class="mb-2"><i class="bi bi-envelope me-2"></i> contacto@iphem.sanjuan.gob.ar</li>
+                </ul>
+            </div>
+            <div class="col-md-4 mb-4">
+                <h5 class="text-uppercase fw-bold text-iphem mb-3">Enlaces Oficiales</h5>
+                <ul class="list-unstyled small">
+                    <li><a href="https://salud.sanjuan.gob.ar/" target="_blank" class="text-white-50 text-decoration-none">Ministerio de Salud</a></li>
+                    <li><a href="https://sisanjuan.gob.ar/" target="_blank" class="text-white-50 text-decoration-none">Si San Juan</a></li>
+                </ul>
+            </div>
+        </div>
+        <hr class="border-secondary">
+        <div class="text-center small text-white-50">
+            &copy; 2026 IPHEM - Gobierno de San Juan. Desarrollo PIF.
+        </div>
+    </div>
+</footer>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,81 @@
+@model IEnumerable<iphem_web.Models.Noticia>
+
+@{
+    ViewData["Title"] = "Novedades Institucionales";
+}
+
+<div class="bg-light py-5 mb-5 border-bottom">
+    <div class="container text-center">
+        <h1 class="fw-bold text-iphem display-5">Novedades Institucionales</h1>
+        <p class="lead text-muted col-md-8 mx-auto">
+            Todas las noticias, campañas y eventos del Instituto Provincial de Hemoterapia.
+        </p>
+    </div>
+</div>
+
+<div class="container mb-5">
+    
+    <div class="mb-4">
+        <a asp-controller="Home" asp-action="Index" class="text-decoration-none text-secondary">
+            <i class="bi bi-arrow-left"></i> Volver al Inicio
+        </a>
+    </div>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm border-0 hover-card">
+                    @if (!string.IsNullOrEmpty(item.ImagenPath))
+                    {
+                        <img src="~/img/noticias/@item.ImagenPath" class="card-img-top" alt="@item.Titulo" style="height: 200px; object-fit: cover;">
+                    }
+                    else
+                    {
+                        <div class="bg-light d-flex align-items-center justify-content-center text-muted" style="height: 200px;">
+                            <i class="bi bi-image fs-1 opacity-25"></i>
+                        </div>
+                    }
+
+                    <div class="card-body d-flex flex-column">
+                        <small class="text-muted fw-bold mb-2">
+                            <i class="bi bi-calendar3 me-1"></i> 
+                            @item.Fechapublicacion?.ToString("dd/MM/yyyy")
+                        </small>
+                        
+                        <h5 class="card-title fw-bold text-dark mb-3">@item.Titulo</h5>
+                        
+                        <p class="card-text text-secondary mb-4 flex-grow-1">
+                            @if (!string.IsNullOrEmpty(item.Epigrafe))
+                            {
+                                @item.Epigrafe
+                            }
+                            else if (item.Cuerpo.Length > 100)
+                            {
+                                @(item.Cuerpo.Substring(0, 100) + "...")
+                            }
+                        </p>
+                        
+                        <a asp-action="Noticia" asp-route-id="@item.Id" class="btn btn-outline-danger w-100 mt-auto">
+                            Leer completa
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (!Model.Any())
+        {
+            <div class="col-12 text-center py-5">
+                <i class="bi bi-journal-x fs-1 text-muted mb-3 d-block"></i>
+                <h4 class="text-muted">No hay noticias publicadas en este momento.</h4>
+                <p>Vuelve a consultar más tarde.</p>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .hover-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .hover-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; }
+</style>

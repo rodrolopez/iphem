@@ -1,0 +1,49 @@
+@model iphem_web.Models.ConfiguracionTurno
+
+@{
+ViewData["Title"] = "Configurar Turnos";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow border-0">
+                <div class="card-header bg-iphem text-white">
+                    <h4 class="mb-0"><i class="bi bi-gear-fill me-2"></i>Parámetros de Atención</h4>
+                </div>
+                <div class="card-body bg-light">
+                    <p class="text-muted mb-4">
+                        Ajustá cómo se generan los turnos disponibles para los donantes. Los cambios afectarán a los próximos turnos solicitados.
+                    </p>
+
+                    <form asp-action="ConfiguracionTurnos">
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Hora de Inicio de Atención</label>
+                            <input asp-for="HoraInicio" type="time" class="form-control form-control-lg" required />
+                            <small class="text-muted">¿A qué hora empieza el primer turno del día?</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Cantidad Total de Turnos por Día</label>
+                            <input asp-for="CantidadTurnos" type="number" min="1" max="200" class="form-control form-control-lg" required />
+                            <small class="text-muted">Límite máximo de personas que se atenderán en la jornada.</small>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Intervalo entre Turnos (Minutos)</label>
+                            <input asp-for="IntervaloMinutos" type="number" min="5" max="60" class="form-control form-control-lg" required />
+                            <small class="text-muted">Tiempo asignado a cada extracción.</small>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-warning btn-lg fw-bold">Guardar Configuración</button>
+                            <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

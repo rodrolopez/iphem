@@ -1,0 +1,117 @@
+@model IEnumerable<iphem_web.Models.Auditoria>
+@using System.Text.Json
+@{
+    ViewData["Title"] = "Auditoría";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="text-iphem fw-bold"><i class="bi bi-shield-lock-fill me-2"></i>Auditoría</h2>
+            <p class="text-muted">Registro histórico de todas las acciones de los usuarios en el sistema.</p>
+        </div>
+        <a asp-action="Index" class="btn btn-link text-secondary text-decoration-none">
+            <i class="bi bi-arrow-left"></i> Volver al Panel de Administracion
+        </a>
+
+    </div>
+
+    <div class="card shadow border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive shadow-sm rounded">
+                <table class="table table-hover table-striped align-middle mb-0" style="table-layout: auto;">
+                    <thead class="table-dark">
+                        <tr>
+                            <th style="min-width: 140px;">Fecha y Hora</th>
+                            <th style="min-width: 150px;">Usuario</th>
+                            <th style="min-width: 110px;">Acción</th>
+                            <th style="min-width: 130px;">Tabla</th>
+                            <th class="w-50" style="min-width: 350px;">Detalle de Cambios</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="text-nowrap">
+                                    <span class="badge bg-secondary fs-6">@item.FechaHora.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</span>
+                                </td>
+
+                                <td class="fw-bold text-break">@item.Usuario</td>
+
+                                <td>
+                                    @if (item.Accion == "CREAR") { <span class="badge bg-success w-100">@item.Accion</span> }
+                                    else if (item.Accion == "MODIFICAR") { <span class="badge bg-warning text-dark w-100">@item.Accion</span> }
+                                    else if (item.Accion == "ELIMINAR") { <span class="badge bg-danger w-100">@item.Accion</span> }
+                                    else { <span class="badge bg-info text-dark w-100">@item.Accion</span> }
+                                </td>
+
+                                <td><code class="text-primary fs-6">@item.Tabla</code></td>
+
+                                <td>
+                                    <div class="p-2 bg-white rounded border text-break" style="max-height: 120px; overflow-y: auto; font-family: monospace; font-size: 0.85rem;">
+                                        @{
+                                            try
+                                            {
+                                                var dictViejos = string.IsNullOrEmpty(item.ValoresAntiguos) ? new Dictionary<string, JsonElement>() : JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(item.ValoresAntiguos);
+                                                var dictNuevos = string.IsNullOrEmpty(item.ValoresNuevos) ? new Dictionary<string, JsonElement>() : JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(item.ValoresNuevos);
+
+                                                <ul class="list-unstyled mb-0">
+                                                    @if (item.Accion == "MODIFICAR" && dictViejos != null && dictNuevos != null)
+                                                    {
+                                                        foreach (var key in dictNuevos.Keys)
+                                                        {
+                                                            var valorNuevo = dictNuevos[key].ToString();
+                                                            var valorViejo = dictViejos.ContainsKey(key) ? dictViejos[key].ToString() : "";
+
+                                                            // SOLO mostramos si el valor realmente cambió
+                                                            if (valorNuevo != valorViejo)
+                                                            {
+                                                                <li class="mb-1">
+                                                                    <strong class="text-secondary">@key:</strong>
+                                                                    <span class="text-danger text-decoration-line-through me-1">@(string.IsNullOrEmpty(valorViejo) ? "Nulo" : valorViejo)</span>
+                                                                    <i class="bi bi-arrow-right text-muted"></i>
+                                                                    <span class="text-success fw-bold ms-1">@(string.IsNullOrEmpty(valorNuevo) ? "Nulo" : valorNuevo)</span>
+                                                                </li>
+                                                            }
+                                                        }
+                                                    }
+                                                    else if (item.Accion == "CREAR" && dictNuevos != null)
+                                                    {
+                                                        foreach (var key in dictNuevos.Keys)
+                                                        {
+                                                            <li><strong class="text-secondary">@key:</strong> <span class="text-success">@dictNuevos[key].ToString()</span></li>
+                                                        }
+                                                    }
+                                                    else if (item.Accion == "ELIMINAR" && dictViejos != null)
+                                                    {
+                                                        foreach (var key in dictViejos.Keys)
+                                                        {
+                                                            <li><strong class="text-secondary">@key:</strong> <span class="text-danger">@dictViejos[key].ToString()</span></li>
+                                                        }
+                                                    }
+                                                </ul>
+                                            }
+                                            catch
+                                            {
+                                                // Si el JSON está mal formado o hay un error, mostramos el texto crudo para que la pantalla no se rompa
+                                                if (!string.IsNullOrEmpty(item.ValoresAntiguos))
+                                                {
+                                                    <div class="text-danger mb-1"><strong>[Antes]:</strong> @item.ValoresAntiguos</div>
+                                                }
+                                                if (!string.IsNullOrEmpty(item.ValoresNuevos))
+                                                {
+                                                    <div class="text-success"><strong>[Después]:</strong> @item.ValoresNuevos</div>
+                                                }
+                                            }
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

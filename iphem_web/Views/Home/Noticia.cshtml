@@ -1,0 +1,41 @@
+@model iphem_web.Models.Noticia
+@{ ViewData["Title"] = Model.Titulo; }
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <a asp-action="Index" class="btn btn-link text-secondary text-decoration-none mb-3">
+                <i class="bi bi-arrow-left"></i> Volver al Inicio
+            </a>
+
+            <h1 class="fw-bold text-iphem mb-2">@Model.Titulo</h1>
+            <p class="lead text-muted">@Model.Epigrafe</p>
+            
+            <div class="d-flex align-items-center text-muted small mb-4">
+                <i class="bi bi-calendar-event me-2"></i>
+                @Model.Fechapublicacion?.ToString("dd 'de' MMMM, yyyy")
+                <span class="mx-2">|</span>
+                <i class="bi bi-person me-2"></i> Prensa IPHEM
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.ImagenPath))
+            {
+                <img src="~/img/noticias/@Model.ImagenPath" class="img-fluid rounded shadow-sm w-100 mb-4" alt="@Model.Titulo">
+            }
+
+            <div class="article-content fs-5" style="line-height: 1.8;">
+                @Model.Cuerpo
+            </div>
+            
+            <hr class="my-5">
+            
+            <div class="bg-light p-4 rounded border-start border-4 border-danger">
+                <h5 class="fw-bold">¿Te interesó esta noticia?</h5>
+                <p class="mb-0">Ayudanos compartiendo información oficial o acercándote a donar.</p>
+                <div class="mt-3">
+                    <a asp-controller="Turnos" asp-action="Create" class="btn btn-iphem">Sacar Turno Ahora</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

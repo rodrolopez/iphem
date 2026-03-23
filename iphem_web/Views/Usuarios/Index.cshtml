@@ -1,0 +1,39 @@
+@model IEnumerable<iphem_web.Models.Usuario>
+@{ ViewData["Title"] = "Personal"; }
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-iphem fw-bold">Personal del Sistema</h2>
+        <a asp-action="Create" class="btn btn-iphem"><i class="bi bi-person-plus"></i> Nuevo Usuario</a>
+    </div>
+
+    <div class="card shadow border-0">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="bg-light">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Fecha Alta</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model) {
+                    <tr>
+                        <td class="fw-bold">@item.Nombrecompleto</td>
+                        <td>@item.Email</td>
+                        <td><span class="badge bg-secondary">@item.IdrolNavigation?.Nombre</span></td>
+                        <td>@item.Fechaalta?.ToString("dd/MM/yyyy")</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="mt-4">
+        <a asp-controller="Admin" asp-action="Index" class="btn btn-link text-secondary text-decoration-none">
+            <i class="bi bi-arrow-left"></i> Volver al Dashboard
+        </a>
+    </div>
+</div>

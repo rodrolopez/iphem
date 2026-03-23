@@ -1,0 +1,47 @@
+@model iphem_web.Models.Noticia
+
+@{
+    ViewData["Title"] = "Nueva Noticia";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-iphem text-white">
+                    <h4 class="mb-0">Redactar Noticia</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="NuevaNoticia" enctype="multipart/form-data">
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Título</label>
+                            <input asp-for="Titulo" class="form-control" placeholder="Ej: Nueva campaña de donación" required />
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Epígrafe (Subtítulo corto)</label>
+                            <input asp-for="Epigrafe" class="form-control" placeholder="Resumen en una frase..." />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Cuerpo de la Noticia</label>
+                            <textarea asp-for="Cuerpo" class="form-control" rows="8" placeholder="Escriba aquí todo el contenido..."></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Imagen Principal</label>
+                            <input type="file" name="archivoImagen" class="form-control" accept="image/*" />
+                            <small class="text-muted">Formatos: JPG, PNG. Máx 2MB.</small>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="Noticias" class="btn btn-secondary me-md-2">Cancelar</a>
+                            <button type="submit" class="btn btn-iphem">Publicar Ahora</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

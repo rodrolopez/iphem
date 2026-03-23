@@ -1,0 +1,109 @@
+@model iphem_web.Models.Triage
+
+@{
+    ViewData["Title"] = "Declaración Jurada de Salud";
+}
+
+<div class="container mt-4 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-header bg-iphem text-white text-center py-4 rounded-top">
+                    <i class="bi bi-clipboard2-pulse fs-1 d-block mb-2"></i>
+                    <h4 class="mb-0 fw-bold">Cuestionario Médico Digital</h4>
+                    <p class="mb-0 small opacity-75">Completá este formulario con sinceridad. Tu salud y la del receptor son prioridad.</p>
+                </div>
+
+                <div class="card-body p-4 p-md-5 bg-light">
+                    <form asp-action="CompletarTriage" method="post">
+                        <input type="hidden" asp-for="IdTurno" />
+
+                        <div class="bg-white p-4 rounded shadow-sm mb-4 border-start border-iphem border-4">
+                            <h5 class="text-iphem mb-4 fw-bold"><i class="bi bi-person-lines-fill me-2"></i>Cuestionario de Evaluación</h5>
+
+                            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center border-bottom pb-3 mb-3 gap-2">
+                                <label class="form-check-label fw-bold text-secondary mb-0" asp-for="PesoMayor50Kg"></label>
+                                <div class="btn-group" role="group">
+                                    <input type="radio" class="btn-check" asp-for="PesoMayor50Kg" id="peso_si" value="true" required>
+                                    <label class="btn btn-outline-success px-4 fw-bold shadow-sm" for="peso_si">SÍ</label>
+
+                                    <input type="radio" class="btn-check" asp-for="PesoMayor50Kg" id="peso_no" value="false" required>
+                                    <label class="btn btn-outline-danger px-4 fw-bold shadow-sm" for="peso_no">NO</label>
+                                </div>
+                            </div>
+
+                            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center border-bottom pb-3 mb-3 gap-2">
+                                <label class="form-check-label fw-bold text-secondary mb-0" asp-for="SentirseBienHoy"></label>
+                                <div class="btn-group" role="group">
+                                    <input type="radio" class="btn-check" asp-for="SentirseBienHoy" id="siente_si" value="true" required>
+                                    <label class="btn btn-outline-success px-4 fw-bold shadow-sm" for="siente_si">SÍ</label>
+
+                                    <input type="radio" class="btn-check" asp-for="SentirseBienHoy" id="siente_no" value="false" required>
+                                    <label class="btn btn-outline-danger px-4 fw-bold shadow-sm" for="siente_no">NO</label>
+                                </div>
+                            </div>
+
+                            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center border-bottom pb-3 mb-3 gap-2">
+                                <label class="form-check-label fw-bold text-secondary mb-0" asp-for="TatuajesPiercings12Meses"></label>
+                                <div class="btn-group" role="group">
+                                    <input type="radio" class="btn-check" asp-for="TatuajesPiercings12Meses" id="tatuaje_si" value="true" required>
+                                    <label class="btn btn-outline-success px-4 fw-bold shadow-sm" for="tatuaje_si">SÍ</label>
+
+                                    <input type="radio" class="btn-check" asp-for="TatuajesPiercings12Meses" id="tatuaje_no" value="false" required>
+                                    <label class="btn btn-outline-danger px-4 fw-bold shadow-sm" for="tatuaje_no">NO</label>
+                                </div>
+                            </div>
+
+                            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center border-bottom pb-3 mb-3 gap-2">
+                                <label class="form-check-label fw-bold text-secondary mb-0" asp-for="Cirugias12Meses"></label>
+                                <div class="btn-group" role="group">
+                                    <input type="radio" class="btn-check" asp-for="Cirugias12Meses" id="cirugia_si" value="true" required>
+                                    <label class="btn btn-outline-success px-4 fw-bold shadow-sm" for="cirugia_si">SÍ</label>
+
+                                    <input type="radio" class="btn-check" asp-for="Cirugias12Meses" id="cirugia_no" value="false" required>
+                                    <label class="btn btn-outline-danger px-4 fw-bold shadow-sm" for="cirugia_no">NO</label>
+                                </div>
+                            </div>
+
+                            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center border-bottom pb-3 mb-3 gap-2">
+                                <label class="form-check-label fw-bold text-secondary mb-0" asp-for="TomoAntibioticos7Dias"></label>
+                                <div class="btn-group" role="group">
+                                    <input type="radio" class="btn-check" asp-for="TomoAntibioticos7Dias" id="antibiotico_si" value="true" required>
+                                    <label class="btn btn-outline-success px-4 fw-bold shadow-sm" for="antibiotico_si">SÍ</label>
+
+                                    <input type="radio" class="btn-check" asp-for="TomoAntibioticos7Dias" id="antibiotico_no" value="false" required>
+                                    <label class="btn btn-outline-danger px-4 fw-bold shadow-sm" for="antibiotico_no">NO</label>
+                                </div>
+                            </div>
+
+                            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center pb-2 gap-2">
+                                <label class="form-check-label fw-bold text-secondary mb-0" asp-for="EmbarazoOLactancia"></label>
+                                <div class="btn-group" role="group">
+                                    <input type="radio" class="btn-check" asp-for="EmbarazoOLactancia" id="embarazo_si" value="true" required>
+                                    <label class="btn btn-outline-success px-4 fw-bold shadow-sm" for="embarazo_si">SÍ</label>
+
+                                    <input type="radio" class="btn-check" asp-for="EmbarazoOLactancia" id="embarazo_no" value="false" required>
+                                    <label class="btn btn-outline-danger px-4 fw-bold shadow-sm" for="embarazo_no">NO</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-warning border border-warning shadow-sm">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" asp-for="AceptoDeclaracionJurada" required id="checkFirma">
+                                <label class="form-check-label small text-dark fw-bold" for="checkFirma">
+                                    Declaro bajo juramento que las respuestas brindadas son verdaderas y asumo la responsabilidad legal por la información proporcionada.
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-iphem btn-lg fw-bold shadow-sm">Firmar y Enviar Cuestionario</button>
+                            <a asp-action="Index" class="btn btn-link text-muted text-decoration-none">Cancelar y volver</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

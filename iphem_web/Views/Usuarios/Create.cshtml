@@ -1,0 +1,44 @@
+@model iphem_web.Models.Usuario
+@{ ViewData["Title"] = "Nuevo Usuario"; }
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow border-0">
+                <div class="card-header bg-iphem text-white">
+                    <h4 class="mb-0">Registrar Nuevo Usuario</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Nombre Completo</label>
+                            <input asp-for="Nombrecompleto" class="form-control" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Email (Usuario)</label>
+                            <input asp-for="Email" type="email" class="form-control" required />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Contraseña</label>
+                            <input asp-for="Passwordhash" type="password" class="form-control" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Rol / Permisos</label>
+                            <select asp-for="Idrol" class="form-select" asp-items="ViewBag.Idrol"></select>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-iphem">Crear Usuario</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

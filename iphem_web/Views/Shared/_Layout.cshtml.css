@@ -1,0 +1,60 @@
+﻿/* _Layout.cshtml.css */
+
+/* Ajuste para que el logo o nombre no se rompa en celus viejos */
+a.navbar-brand {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+}
+
+/* CAMBIO CLAVE: Los links ahora son del Rojo Institucional (#DE492C) y no Azul */
+a {
+  color: #DE492C;
+}
+
+/* Si pasas el mouse por un link, se pone naranja (#F37E02) */
+a:hover {
+  color: #F37E02;
+}
+
+/* Si usamos un btn-primary estándar, forzamos a que sea Rojo IPHEM */
+.btn-primary {
+  color: #fff;
+  background-color: #DE492C;
+  border-color: #DE492C;
+}
+
+.btn-primary:hover {
+  background-color: #c43e25; /* Un rojo un poquito mas oscuro */
+  border-color: #b0361f;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+  color: #fff;
+  background-color: #DE492C;
+  border-color: #DE492C;
+}
+
+/* Bordes suaves */
+.border-top {
+  border-top: 1px solid #e5e5e5;
+}
+.border-bottom {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy {
+  font-size: 1rem;
+  line-height: inherit;
+}
+
+/* ELIMINÉ la posición absoluta del footer para que no tape contenido */
+.footer {
+  width: 100%;
+  white-space: nowrap;
+  line-height: 60px;
+}
