@@ -1,4 +1,4 @@
-# 🩸 IPHEM - Sistema Integral SaaS para Bancos de Sangre
+# IPHEM - Sistema Integral SaaS para Bancos de Sangre
 
 ![.NET](https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
 ![C#](https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=c-sharp&logoColor=white)
@@ -6,12 +6,12 @@
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)
 ![Llama 3](https://img.shields.io/badge/AI-Llama_3.1-04242C?style=for-the-badge)
 
-## 📝 Descripción del Proyecto
+## Descripción del Proyecto
 Plataforma SaaS (Software as a Service) desarrollada como Proyecto Final de Grado (Tecnicatura en Desarrollo de Software). Diseñada específicamente para modernizar y digitalizar el ciclo completo de atención del **Instituto Provincial de Hemoterapia (IPHEM)** de San Juan, Argentina.
 
 El sistema elimina la dependencia del papel, agiliza los tiempos de espera y dota a la gerencia de herramientas de análisis de datos impulsadas por Inteligencia Artificial.
 
-## ✨ Características Principales
+## Características Principales
 
 ### 1. Portal Público y CMS (Gestor de Contenidos)
 * Interfaz pública responsiva orientada al ciudadano.
@@ -32,7 +32,7 @@ El sistema elimina la dependencia del papel, agiliza los tiempos de espera y dot
 * Generación instantánea de reportes ejecutivos y campañas de marketing basándose exclusivamente en datos demográficos reales calculados en el backend (aplicación estricta de *Guardrails* para evitar alucinaciones).
 * Exportación de informes oficiales a PDF mediante HTML5 Canvas y html2pdf.
 
-## ⚙️ Arquitectura y Tecnologías
+## Arquitectura y Tecnologías
 * **Backend:** ASP.NET Core MVC (Patrón Modelo-Vista-Controlador).
 * **Capa de Datos:** Entity Framework Core (ORM) + PostgreSQL.
 * **Frontend:** Vistas Razor (`.cshtml`), Bootstrap 5, Vanilla JS, Chart.js.
